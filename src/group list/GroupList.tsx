@@ -5,7 +5,6 @@ import {Group} from "../dataInterface";
 import style from "./groupList.module.css"
 import {Select} from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
-
 const GroupList = () => {
     const [groups, setGroups] = useState([] as Group[]);
     const [selectedPrivacy, setSelectedPrivacy] = useState("" as string);
@@ -13,7 +12,6 @@ const GroupList = () => {
     const [selectedFriends, setSelectedFriends] = useState("" as string);
     const [loading, setLoading] = useState(true as boolean)
     const [uniqueAvatarColors, setUniqueAvatarColors] = useState([] as { label: string, value: string }[]);
-
 
     function getUniqueAvatarColors(groups: Group[]) {
         const colors = groups.reduce((acc: string[], curr) => {
@@ -29,18 +27,29 @@ const GroupList = () => {
     }
 
     const fetchData = async () => {
-        await getFilteredGroups(selectedPrivacy, selectedColor, selectedFriends).then(response => response && setGroups(response.data ?? [])).finally(() => setLoading(false))
+        try {
+            await getFilteredGroups(selectedPrivacy, selectedColor, selectedFriends)
+                .then(response => response && setGroups(response.data ?? []))
+                .finally(() => setLoading(false))
+        } catch (error) {
+            console.error("Ошибка при получении отфильтрованных групп:", error);
+        }
     };
 
     useEffect(() => {
-        getAllGroups().then(response => response.data && getUniqueAvatarColors(response.data)).then(response => response && setUniqueAvatarColors(response)).finally(() => setLoading(false))
+        getAllGroups()
+            .then(response => response.data && getUniqueAvatarColors(response.data))
+            .then(response => response && setUniqueAvatarColors(response))
+            .finally(() => setLoading(false))
+            .catch(error => {
+                console.error("Ошибка при получении всех групп:", error);
+            });
     }, []);
 
     useEffect(() => {
         setLoading(true)
         fetchData();
     }, [selectedFriends, selectedColor, selectedPrivacy]);
-
 
     return (
         <div className={style.wrapper}>
