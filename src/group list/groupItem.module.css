@@ -1,0 +1,33 @@
+.card {
+    width: 50vw;
+    min-width: 450px;
+    margin-top: 60px;
+    padding: 30px;
+    display: flex;
+
+}
+
+.avatar {
+    margin-right: 50px;
+}
+
+.friends {
+    cursor: pointer;
+    color: orange;
+}
+.friends:hover{
+    color: red;
+}
+.friendsList {
+    height: auto;
+    margin-top: 20px;
+}
+
+.closed {
+    color: grey;
+    margin-bottom: 45px;
+}
+
+.container {
+    min-height: 100px;
+}
